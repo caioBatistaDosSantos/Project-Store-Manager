@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-escape */
 const Joi = require('joi');
 const {
   HTTP_BAD_REEQUEST_STATUS,
@@ -8,13 +7,13 @@ const {
 const PRODUCTS = Joi.object({
   name: Joi.string().min(5).max(30).required()
     .messages({
-      required: '\"name\" is required',
-      pattern: '\"name\" length must be at least 5 characters long',
+      required: '"name" is required',
+      pattern: '"name" length must be at least 5 characters long',
     }),
   quantity: Joi.number().min(1).required()
     .messages({
-      required: '\"quantity\" is required',
-      pattern: '\"quantity\" must be greater than or equal to 1',
+      required: '"quantity" is required',
+      pattern: '"quantity" must be greater than or equal to 1',
     }),
 });
 
