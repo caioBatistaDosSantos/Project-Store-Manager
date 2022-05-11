@@ -1,5 +1,6 @@
 const productsModel = require('../models/productsModel');
 const objectError = require('../utils/objectError');
+const { HTTP_CONFLICT_STATUS, HTTP_NOT_FOUND_STATUS } = require('../utils/status-HTTP');
 
 const getProductsAll = async () => {
   const products = await productsModel.getProductsAll();
@@ -16,15 +17,26 @@ const getProductById = async (id) => {
 const createProduct = async (name, quantity) => {
   const verifyProduct = await productsModel.getProductByName(name);
 
-  if (verifyProduct) throw objectError(409, 'Product already exists');
+  if (verifyProduct) throw objectError(HTTP_CONFLICT_STATUS, 'Product already exists');
 
   const registeredProduct = await productsModel.createProduct(name, quantity);
 
   return registeredProduct;
 };
 
+const updateProduct = async (id, name, quantity) => {
+  const verifyProduct = await productsModel.getProductById(id);
+
+  if (!verifyProduct) throw objectError(HTTP_NOT_FOUND_STATUS, 'Product not found');
+
+  const updatedProduct = await productsModel.updateProduct(id, name, quantity);
+
+  return updatedProduct;
+};
+
 module.exports = {
   getProductsAll,
   getProductById,
   createProduct,
+  updateProduct,
 };
