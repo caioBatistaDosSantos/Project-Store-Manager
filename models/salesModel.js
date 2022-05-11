@@ -27,7 +27,25 @@ const getSaleById = async (id) => {
   throw objectError(HTTP_NOT_FOUND_STATUS, 'Sale not found');
 };
 
+const createIdSale = async () => {
+  const query = 'INSERT INTO sales (date) VALUES (?)';
+  const date = new Date();
+
+  const [sale] = await connection.execute(query, [date]);
+
+  return sale.insertId;
+};
+
+const createSale = async (newId, productId, quantity) => {
+  const query = `INSERT INTO sales_products (sale_id, product_id, quantity)
+    VALUES (?, ?, ?)`;
+  
+  await connection.execute(query, [newId, productId, quantity]);
+};
+
 module.exports = {
   getSalesAll,
   getSaleById,
+  createIdSale,
+  createSale,
 }; 

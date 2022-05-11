@@ -17,15 +17,20 @@ const SALE = Joi.object({
 });
 
 const validateSale = (req, res, next) => {
-  const { productId, quantity } = req.body;
+  const atributes = req.body;
 
-  const { error } = SALE.validate({ productId, quantity });
-
-  const HTTP_STATUS = error.details[0].type === 'any.required'
-    ? HTTP_BAD_REEQUEST_STATUS
-    : HTTP_UNPROCESSABLE_ENTITY_STATUS;
+  const verifySale = atributes
+    .map(({ productId, quantity }) => SALE.validate({ productId, quantity }))
+    .find(({ error }) => error);
   
-  if (error) res.status(HTTP_STATUS).json({ message: error.message });
+  if (verifySale) {
+    const { error } = verifySale;
+    const HTTP_STATUS = error.details[0].type === 'any.required'
+      ? HTTP_BAD_REEQUEST_STATUS
+      : HTTP_UNPROCESSABLE_ENTITY_STATUS;
+
+    return res.status(HTTP_STATUS).json({ message: error.message });
+  }
 
   next();
 };

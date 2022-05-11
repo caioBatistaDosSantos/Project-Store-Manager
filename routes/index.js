@@ -12,7 +12,7 @@ router.get('/sales', salesController.getSalesAll);
 router.get('/sales/:id', salesController.getSaleById);
 
 router.post('/products', validateProduct, productsController.createProduct);
-router.post('/sales', validateSale);
+router.post('/sales', validateSale, salesController.createSale);
 
 router.put('/products/:id', validateProduct, productsController.updateProduct);
 
