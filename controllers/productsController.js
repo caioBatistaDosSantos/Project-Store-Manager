@@ -1,6 +1,6 @@
 const productsService = require('../services/productsService');
 const {
-  HTTP_OK_STATUS, HTTP_CREATED_STATUS } = require('../utils/status-HTTP');
+  HTTP_OK_STATUS, HTTP_CREATED_STATUS, HTTP_NO_CONTENT_STATUS } = require('../utils/status-HTTP');
 
 const getProductsAll = async (_req, res) => {
   const products = await productsService.getProductsAll();
@@ -45,9 +45,22 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
+const deleteProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    await productsService.deleteProduct(id);
+
+    return res.status(HTTP_NO_CONTENT_STATUS).send();
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getProductsAll,
   getProductById,
   createProduct,
   updateProduct,
+  deleteProduct,
 }; 
