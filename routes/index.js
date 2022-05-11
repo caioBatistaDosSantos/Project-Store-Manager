@@ -15,6 +15,7 @@ router.post('/products', validateProduct, productsController.createProduct);
 router.post('/sales', validateSale, salesController.createSale);
 
 router.put('/products/:id', validateProduct, productsController.updateProduct);
+router.put('/sales/:id', validateSale, salesController.updateSale);
 
 router.delete('/products/:id', productsController.deleteProduct);
 
