@@ -1,5 +1,6 @@
 const salesService = require('../services/salesService');
-const { HTTP_OK_STATUS, HTTP_CREATED_STATUS } = require('../utils/status-HTTP');
+const {
+  HTTP_OK_STATUS, HTTP_CREATED_STATUS, HTTP_NO_CONTENT_STATUS } = require('../utils/status-HTTP');
 
 const getSalesAll = async (_req, res) => {
   const sales = await salesService.getSalesAll();
@@ -40,9 +41,22 @@ const updateSale = async (req, res, next) => {
   }
 };
 
+const deleteSale = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    await salesService.deleteSale(id);
+
+    return res.status(HTTP_NO_CONTENT_STATUS).send();
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getSalesAll,
   getSaleById,
   createSale,
   updateSale,
+  deleteSale,
 }; 

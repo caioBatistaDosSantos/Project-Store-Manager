@@ -44,9 +44,18 @@ const updateSale = async (id, body) => {
   return updatedSale;
 };
 
+const deleteSale = async (id) => {
+  const verifySale = await salesModel.getSaleById(id);
+
+  if (!verifySale) throw objectError(HTTP_NOT_FOUND_STATUS, 'Sale not found');
+
+  await salesModel.deleteSale(id);
+};
+
 module.exports = {
   getSalesAll,
   getSaleById,
   createSale,
   updateSale,
+  deleteSale,
 };
