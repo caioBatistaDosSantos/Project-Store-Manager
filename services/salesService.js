@@ -17,8 +17,12 @@ const getSaleById = async (id) => {
 const createSale = async (body) => {
   const newId = await salesModel.createIdSale();
 
-  await Promise.all(body
-    .map(({ productId, quantity }) => salesModel.createSale(newId, productId, quantity)));
+  await Promise.all(
+    body.map(({ productId, quantity }) => salesModel
+      .updateQuantityProduct(productId, quantity, 'subtraction')),
+    body.map(({ productId, quantity }) => salesModel
+      .createSale(newId, productId, quantity)),
+  );
 
   const newSale = {
     id: newId,
@@ -33,8 +37,12 @@ const updateSale = async (id, body) => {
 
   if (!verifySale) throw objectError(HTTP_NOT_FOUND_STATUS, 'Sale not found');
 
-  await Promise.all(body
-    .map(({ productId, quantity }) => salesModel.updateSale(id, productId, quantity)));
+  await Promise.all(
+    body.map(({ productId, quantity }) => salesModel
+      .updateQuantityProduct(productId, quantity, 'subtraction')),
+    body.map(({ productId, quantity }) => salesModel
+      .updateSale(id, productId, quantity)),
+  );
 
   const updatedSale = {
     saleId: id,
@@ -48,6 +56,14 @@ const deleteSale = async (id) => {
   const verifySale = await salesModel.getSaleById(id);
 
   if (!verifySale) throw objectError(HTTP_NOT_FOUND_STATUS, 'Sale not found');
+
+  const sale = await salesModel.getQuantityAndProduct(id);
+
+  await Promise.all(
+    sale
+      .map(({ product_id: productId, quantity }) => salesModel
+        .updateQuantityProduct(productId, quantity, 'sum')),
+  );
 
   await salesModel.deleteSale(id);
 };

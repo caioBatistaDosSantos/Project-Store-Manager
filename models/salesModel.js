@@ -55,6 +55,26 @@ const deleteSale = async (id) => {
   await connection.execute(query, [id]);
 };
 
+const getQuantityAndProduct = async (id) => {
+  const query = 'SELECT product_id, quantity FROM sales_products WHERE sale_id = ?';
+
+  const [sale] = await connection.execute(query, [id]);
+
+  return sale;
+};
+
+const updateQuantityProduct = async (productId, quantity, string) => {
+  let query = 'SELECT quantity FROM products WHERE id = ?';
+  const [quantityProduct] = await connection.execute(query, [productId]);
+
+  const newQuantityProduct = string === 'sum'
+    ? quantityProduct[0].quantity + quantity
+    : quantityProduct[0].quantity - quantity;
+
+  query = 'UPDATE products SET quantity = ? WHERE id = ?';
+  await connection.execute(query, [newQuantityProduct, productId]);
+};
+
 module.exports = {
   getSalesAll,
   getSaleById,
@@ -62,4 +82,6 @@ module.exports = {
   createSale,
   updateSale,
   deleteSale,
+  updateQuantityProduct,
+  getQuantityAndProduct,
 }; 
