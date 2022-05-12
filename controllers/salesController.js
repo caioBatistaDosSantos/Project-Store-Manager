@@ -20,12 +20,16 @@ const getSaleById = async (req, res, next) => {
   }
 };
 
-const createSale = async (req, res) => {
-  const { body } = req;
+const createSale = async (req, res, next) => {
+  try {
+    const { body } = req;
 
-  const successfulSale = await salesService.createSale(body);
+    const successfulSale = await salesService.createSale(body);
 
-  return res.status(HTTP_CREATED_STATUS).json(successfulSale);
+    return res.status(HTTP_CREATED_STATUS).json(successfulSale);
+  } catch (err) {
+    next(err);
+  }
 };
 
 const updateSale = async (req, res, next) => {

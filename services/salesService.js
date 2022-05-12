@@ -19,6 +19,11 @@ const createSale = async (body) => {
 
   await Promise.all(
     body.map(({ productId, quantity }) => salesModel
+      .validateQuantityProduct(productId, quantity)),
+  );
+
+  await Promise.all(
+    body.map(({ productId, quantity }) => salesModel
       .updateQuantityProduct(productId, quantity, 'subtraction')),
     body.map(({ productId, quantity }) => salesModel
       .createSale(newId, productId, quantity)),
@@ -37,6 +42,10 @@ const updateSale = async (id, body) => {
 
   if (!verifySale) throw objectError(HTTP_NOT_FOUND_STATUS, 'Sale not found');
 
+  await Promise.all(
+    body.map(({ productId, quantity }) => salesModel
+      .validateQuantityProduct(productId, quantity)),
+  );
   await Promise.all(
     body.map(({ productId, quantity }) => salesModel
       .updateQuantityProduct(productId, quantity, 'subtraction')),

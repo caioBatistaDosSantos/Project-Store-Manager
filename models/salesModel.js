@@ -1,6 +1,6 @@
 const connection = require('./connection');
 const objectError = require('../utils/objectError');
-const { HTTP_NOT_FOUND_STATUS } = require('../utils/status-HTTP');
+const { HTTP_NOT_FOUND_STATUS, HTTP_UNPROCESSABLE_ENTITY_STATUS } = require('../utils/status-HTTP');
 
 const getSalesAll = async () => {
   const query = `SELECT sa.id AS saleId, sa.date, sa_pro.product_id AS productId, sa_pro.quantity
@@ -75,6 +75,17 @@ const updateQuantityProduct = async (productId, quantity, string) => {
   await connection.execute(query, [newQuantityProduct, productId]);
 };
 
+const validateQuantityProduct = async (productId, quantity) => {
+  const query = 'SELECT quantity FROM products WHERE id = ?';
+  const [quantityProduct] = await connection.execute(query, [productId]);
+
+  const newQuantityProduct = quantityProduct[0].quantity - quantity;
+
+  if (newQuantityProduct < 0) {
+    throw objectError(HTTP_UNPROCESSABLE_ENTITY_STATUS, 'Such amount is not permitted to sell');
+  }
+};
+
 module.exports = {
   getSalesAll,
   getSaleById,
@@ -84,4 +95,5 @@ module.exports = {
   deleteSale,
   updateQuantityProduct,
   getQuantityAndProduct,
+  validateQuantityProduct,
 }; 
