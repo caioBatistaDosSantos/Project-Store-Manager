@@ -1,6 +1,6 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const salesService = require('../../../services/salesService')
+const salesService = require('../../../services/salesService');
 const salesModel = require('../../../models/salesModel');
 const { HTTP_NOT_FOUND_STATUS, HTTP_UNPROCESSABLE_ENTITY_STATUS } = require('../../../utils/status-HTTP');
 const objectError = require('../../../utils/objectError');
