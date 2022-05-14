@@ -192,7 +192,7 @@ describe('Testando a funcão createProduct:', () => {
       name: "produto A",
       quantity: 10
     };
-    const resultProductName = true;
+    const resultProductName = false;
 
     beforeEach(() => {
       sinon.stub(productModel, 'createProduct')

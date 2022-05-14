@@ -15,12 +15,12 @@ const getSaleById = async (id) => {
 };
 
 const createSale = async (body) => {
-  const newId = await salesModel.createIdSale();
-
   await Promise.all(
     body.map(({ productId, quantity }) => salesModel
       .validateQuantityProduct(productId, quantity)),
   );
+
+  const newId = await salesModel.createIdSale();
 
   await Promise.all(
     body.map(({ productId, quantity }) => salesModel
