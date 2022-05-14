@@ -110,3 +110,48 @@ describe('Testando a funcão getSalesAll:', () => {
     // });
   });
 });
+
+describe('Testando a funcão getSaleById:', () => {
+  describe('Quando o id da venda existe:', () => {
+    const req = { params: { id: 1 } };
+    const res = {};
+    const next = () => {};
+
+    const resultExecute = [
+      {
+        saleId: 1,
+        date: "2021-09-09T04:54:29.000Z",
+        productId: 1,
+        quantity: 2
+      },
+      {
+        saleId: 1,
+        date: "2021-09-09T04:54:54.000Z",
+        productId: 2,
+        quantity: 2
+      }
+    ];
+
+    beforeEach(() => {
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub().returns(res);
+
+      sinon.stub(salesService, 'getSaleById')
+        .resolves(resultExecute);
+    });
+
+    afterEach(() => salesService.getSaleById.restore());
+
+    it('retorna status "200"', async () => {
+      await salesController.getSaleById(req, res, next);
+
+      expect(res.status.calledWith(HTTP_OK_STATUS)).to.be.equal(true);
+    });
+
+    it('retorna um json com os dados', async () => {
+      await salesController.getSaleById(req, res, next);
+
+      expect(res.json.calledWith(resultExecute)).to.be.equal(true);
+    });
+  });
+});
