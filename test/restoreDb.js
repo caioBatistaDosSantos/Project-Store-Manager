@@ -5,9 +5,9 @@ const restoreDb = async () => {
     const { MYSQL_USER, MYSQL_PASSWORD, MYSQL_HOST } = process.env;
 
     const importer = new Importer({
-        user: MYSQL_USER,
-        password: MYSQL_PASSWORD,
-        host: MYSQL_HOST,
+        user: MYSQL_USER || 'root',
+        password: MYSQL_PASSWORD || 'password',
+        host: MYSQL_HOST || 'localhost',
       });
 
       await importer.import("./StoreManager.sql");
